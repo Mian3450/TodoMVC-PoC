@@ -1,14 +1,21 @@
 import js from '@eslint/js'
 import globals from 'globals'
-import prettier from 'eslint-plugin-prettier'
+import prettier from 'eslint-config-prettier'
 import playwright from 'eslint-plugin-playwright'
-import eslintConfigPrettier from 'eslint-config-prettier'
-import { defineConfig } from 'eslint/config'
 
-export default defineConfig([
+export default [
   {
     files: ['**/*.{js,mjs,cjs}'],
-
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'playwright-report/**',
+      'test-results/**',
+      'allure-results/**',
+      'allure-report/**',
+      'coverage/**',
+      '.nyc_output/**'
+    ],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -17,34 +24,16 @@ export default defineConfig([
         ...globals.node,
       },
     },
-
-    plugins: {
-      js,
-      prettier,
-    },
-
-    extends: [
-      'eslint:recommended',
-      'plugin:prettier/recommended',
-      eslintConfigPrettier,
-    ],
-
     rules: {
-      'prettier/prettier': ['error', { semi: false }],
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      'no-console': 'off',
+      'no-console': 'warn',
       semi: ['error', 'never'],
     },
   },
+  js.configs.recommended,
   {
-    files: ['tests/**/*.js'],
-    plugins: { playwright },
-    extends: ['plugin:playwright/playwright-test'],
-    rules: {
-      'prettier/prettier': ['error', { semi: false }],
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      'no-console': 'off',
-      semi: ['error', 'never'],
-    },
+    files: ['tests/**/*.js', '**/*.spec.js'],
+    ...playwright.configs['flat/playwright-test'],
   },
-])
+  prettier,
+]

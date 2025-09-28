@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepare": "husky install",
-    "lint": "eslint . --ext .js",
+    "prepare": "husky && husky install",
+    "lint": "eslint .",
     "format": "prettier --write .",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -24,14 +24,15 @@
     "eslint-plugin-playwright": "^2.2.2",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.4.0",
-    "husky": "^9.1.7",
+    "husky": "^8.0.0",
     "lint-staged": "^16.2.1",
     "prettier": "^3.6.2"
   },
   "lint-staged": {
-    "*.js": [
+    "*.{js,jsx,ts,tsx,json}": [
       "eslint --fix",
-      "prettier --write"
+      "prettier --write",
+      "git add"
     ]
   }
 }
